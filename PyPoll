@@ -1,0 +1,37 @@
+import os
+import csv
+
+with open ('election_data.csv') as csvfile:
+    reader = csv.reader(csvfile, delimiter=",")
+    rows = list(reader)
+    total_votes = 0
+    candidates_with_votes = set()
+    won_percentage = {}
+    count_per_candidate = {}
+    highest_vote_candidate = ""
+    highest_vote_votes = 0
+    
+    for row in rows[1:]:
+        total_votes += 1
+        candidates_with_votes.add(row[2])
+        if row[2] not in count_per_candidate:
+            count_per_candidate[row[2]] = 0
+        count_per_candidate[row[2]] += 1
+    
+    for candidate in candidates_with_votes:
+        if count_per_candidate[candidate] > highest_vote_votes:
+            highest_vote_votes = count_per_candidate[candidate]
+            highest_vote_candidate = candidate
+        won_percentage[candidate] = 100 * count_per_candidate[candidate] / total_votes
+
+    print("Election Results")
+    print("----------------")
+    print("Total Votes: " + str(total_votes))
+    print("----------------")
+    
+    for candidate in candidates_with_votes:
+        print(candidate + " " + str(round(won_percentage[candidate], 2)) + "% (" + str(count_per_candidate[candidate]) + ")")
+    
+    print("----------------")
+    print("Winner: " + highest_vote_candidate)
+    
